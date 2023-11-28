@@ -1,3 +1,7 @@
+## LI Tech Advisors ##
+## VNC Scrubber Tool ##
+
+
 # Define the log file path
 $logFilePath = "C:\temp\VNC_Log.txt"
 
@@ -103,9 +107,6 @@ function Remove-VncDirectories {
 # Remove VNC directories in C:\Program Files and C:\Program Files (x86)
 Remove-VncDirectories "C:\Program Files"
 Remove-VncDirectories "C:\Program Files (x86)"
-
-# Rest of your script...
-
 
 # Log completion of script
 Write-Log "VNC removal process completed."
