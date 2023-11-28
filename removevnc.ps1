@@ -1,7 +1,3 @@
-## LI Tech Advisors ##
-## VNC Scrubber Tool ##
-
-
 # Define the log file path
 $logFilePath = "C:\temp\VNC_Log.txt"
 
@@ -107,6 +103,27 @@ function Remove-VncDirectories {
 # Remove VNC directories in C:\Program Files and C:\Program Files (x86)
 Remove-VncDirectories "C:\Program Files"
 Remove-VncDirectories "C:\Program Files (x86)"
+
+
+# Function to remove leftover registry entries for VNC
+function Remove-VncRegistryEntries {
+    Param ([string]$registryPath)
+    try {
+        $vncRegEntries = Get-ItemProperty -Path "$registryPath\*" -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -like "*VNC*" }
+        foreach ($entry in $vncRegEntries) {
+            Remove-Item -Path "$registryPath\$($entry.PSChildName)" -Force
+            Write-Log "Removed registry entry: $($entry.DisplayName) from $registryPath"
+        }
+    }
+    catch {
+        Write-Log "Error encountered while removing VNC registry entries in ${registryPath}: $_"
+    }
+}
+
+# Remove VNC registry entries from both 64-bit and 32-bit paths
+Remove-VncRegistryEntries "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall"
+Remove-VncRegistryEntries "HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+
 
 # Log completion of script
 Write-Log "VNC removal process completed."
